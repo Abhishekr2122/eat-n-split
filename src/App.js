@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Children } from "react";
 
-let initialFriends = [
+const initialFriends = [
   {
     id: 118836,
     name: "Clark",
@@ -32,10 +32,13 @@ function Button({ children, onClick }) {
 
 export default function App() {
   const [showAddFriend, setShowAddFriend] = useState(true);
-  const [friendList, setFriendList] = useState(initialFriends);
+  const [friends, setFriends] = useState(initialFriends);
 
-  function handleFriendlist(newList) {
-    setFriendList(newList);
+  function handleAddFriend(friend) {
+    setFriends(function (friends) {
+      return [...friends, friend];
+    });
+    setShowAddFriend(false);
   }
 
   function handleShowAddFriend() {
@@ -46,13 +49,8 @@ export default function App() {
   return (
     <div className="app">
       <div className="sidebar">
-        <FriendsList friendList={friendList} />
-        {showAddFriend && (
-          <FormAddFriend
-            handleFriendlist={handleFriendlist}
-            friendList={friendList}
-          />
-        )}
+        <FriendsList friends={friends} />
+        {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
         <Button onClick={handleShowAddFriend}>
           {showAddFriend ? "Close" : "Add friend"}
         </Button>
@@ -63,8 +61,7 @@ export default function App() {
   );
 }
 
-function FriendsList({ friendList }) {
-  const friends = friendList;
+function FriendsList({ friends }) {
   return (
     <ul>
       {friends.map(function (friend) {
@@ -74,7 +71,7 @@ function FriendsList({ friendList }) {
   );
 }
 
-function FormAddFriend({ handleFriendlist, friendList }) {
+function FormAddFriend({ onAddFriend }) {
   const [name, setName] = useState("");
   const [image, setImage] = useState("https://i.pravatar.cc/48");
 
@@ -101,7 +98,7 @@ function FormAddFriend({ handleFriendlist, friendList }) {
       balance: 0,
     };
 
-    handleFriendlist([...friendList, newFriend]);
+    onAddFriend(newFriend);
     setName("");
     setImage("https://i.pravatar.cc/48");
   }
