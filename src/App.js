@@ -171,7 +171,9 @@ function FormSplitBill({ selectedFriend }) {
         type="text"
         value={paidByUser}
         onChange={function (e) {
-          setPaidByUser(Number(e.target.value));
+          setPaidByUser(
+            Number(e.target.value) > bill ? paidByUser : Number(e.target.value)
+          );
         }}
       />
 
